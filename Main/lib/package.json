@@ -1,0 +1,23 @@
+{
+    "name": "unsolved",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "start": "node index.js",
+        "test": "jest"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "jest": "^24.8.0",
+        "nodemon": "^2.0.20"
+    },
+    "dependencies": {
+        "inquirer": "^8.2.4",
+        "mysql2": "^3.0.0"
+    }
+}
