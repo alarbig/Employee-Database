@@ -1,9 +1,23 @@
 
 const inquirer = require('inquirer')
-// const cTable = require('console.table');
+const cTable = require('console.table');
 const mysql = require('mysql2');
 // module.exports = newSelection;
 
+const db = mysql.createConnection(
+    {
+      host: 'localhost',
+      user: 'root',
+      password: 'password',
+      database: 'office_db'
+    },
+    console.log(`Connected to the office_db database.`)
+  );
+
+  db.connect(function (err){
+    if (err) throw err;
+    newSelection();
+  })
 
 const newSelection = () => {
      inquirer.prompt(
@@ -119,40 +133,3 @@ const updateEmployee = () => {
         ]
     )
 };
-
-
-
-
-
-// {
-//     type: 'list',
-//     message: 'Would you like to add a new Employee?',
-//     name: 'newEmployee',
-//     choices: ['Yes', 'No']        
-//         }
-//         .then(function(answer){
-//             if (answer === 'Yes'){
-//                 addEmployee();
-//             } else {
-//                 homePage();
-//             }
-//         })
-
-
-// {
-//     type: 'input',
-//     message: 'Would you like to add a new Dept?',
-//     name: 'dept'        
-//         },
-
-// {
-//     type: 'input',
-//     message: 'Would you like to add a new role?',
-//     name: 'newRole'        
-//         },
-
-
-// if (choice === 'Cancel') {
-//     newSelection()
-
-newSelection();
