@@ -57,20 +57,8 @@ const addDept = () => {
                 message: 'What is the name of this Dept?',
                 name: 'name'        
                     }, 
-                    {
-                        type: 'list',
-                        message: 'Would you like to add another Dept?',
-                        name: 'addNewDept', 
-                        choices: ['Yes', 'No']        
-                            }
         ]
-    ).then (function (choice){
-        if (choice.addNewDept === 'Yes'){
-            addDept()
-        } else {
-            newSelection()
-        }
-    })
+    )
 };
 
 const addRole = () => {
