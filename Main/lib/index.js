@@ -1,8 +1,6 @@
-
 const inquirer = require('inquirer')
 const cTable = require('console.table');
 const mysql = require('mysql2');
-// module.exports = newSelection;
 
 const db = mysql.createConnection(
     {
@@ -36,7 +34,7 @@ const newSelection = () => {
         } if (choice.homeSelection === 'Add an employee'){
             addEmployee()
         } if (choice.homeSelection === 'Add a new Role'){
-            addRole()
+            addNewRole()
         } if (choice.homeSelection === 'Update Employee role') {
             updateEmployee()
         } if (choice.homeSelection === 'View all depts'){
@@ -58,12 +56,25 @@ const addDept = () => {
                 name: 'name'        
                     }, 
         ]
-    )
+    ) .then (response => {
+        db.query('INSERT INTO department SET ?', 
+        { name: response.name}, 
+        (err, res) => {
+            if (err) throw err;
+            console.log(`${response.name} Department added!`);
+            newSelection();
+        })
+    })
 };
 
-const addRole = () => {
+const addNewRole = () => {
     return inquirer.prompt(
-        [
+        [   
+            {
+            type: 'input',
+            message: 'What is this roles ID # ?',
+            name: 'idNumber'                        
+            },
             {
             type: 'input',
             message: 'What is the name of this role?',
@@ -76,11 +87,19 @@ const addRole = () => {
                     },
                     {
                         type: 'input',
-                        message: 'What Dept does this role belong to?',
+                        message: 'What is the Dept id?',
                         name: 'dept'        
                             },
         ]
-    )
+    ).then (res => {
+        db.query ('INSERT INTO role SET ?', {
+            id: res.idNumber, title: res.name, salary: res.salary, department_id: res.dept
+        }, (err, res) => {
+            if (err) throw err;
+            console.log('New role added successfully!');
+            newSelection();
+        })
+    })
 };
 
 const addEmployee = () => {
@@ -98,16 +117,24 @@ const addEmployee = () => {
                             },
                             {
                                 type: 'input',
-                                message: 'What is the employees role?',
-                                name: 'role'        
+                                message: 'What is the employees role ID #?',
+                                name: 'roleId'        
                                     },
                                     {
                                         type: 'input',
-                                        message: 'Who is this employees manager?',
+                                        message: 'What is their managers ID #?',
                                         name: 'manager'        
                                             },
         ]
-    )
+    ).then (res =>{
+        db.query('INSERT INTO employee SET ?',  {
+            first_name: res.firstName, last_name: res.lastName, role_id: res.roleId, manager_id: res.manager
+        }, (err, res) => {
+            if (err) throw err;
+            console.log (`New user has been added successfully!`);
+            newSelection();
+        })
+    })
 };
 
 const updateEmployee = () => {
@@ -121,3 +148,27 @@ const updateEmployee = () => {
         ]
     )
 };
+
+const viewAllDept = () => {
+    db.query(`SELECT * FROM department`, (err, res) =>{
+        if (err) throw err;
+        console.table(res);
+        newSelection();
+    })
+};
+
+const displayRole =() => {
+    db.query(`SELECT * FROM role`, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        newSelection();
+    })
+}
+
+const allEmployees = () => {
+    db.query(`SELECT * FROM employee`, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        newSelection();
+    })
+}
