@@ -91,12 +91,12 @@ const addNewRole = () => {
                         name: 'dept'        
                             },
         ]
-    ).then (res => {
+    ).then (response => {
         db.query ('INSERT INTO role SET ?', {
-            id: res.idNumber, title: res.name, salary: res.salary, department_id: res.dept
-        }, (err, res) => {
+            id: response.idNumber, title: response.name, salary: response.salary, department_id: response.dept
+        }, (err, response) => {
             if (err) throw err;
-            console.log('New role added successfully!');
+            console.log(`New role, ${response.name}, added successfully!`);
             newSelection();
         })
     })
@@ -138,16 +138,35 @@ const addEmployee = () => {
 };
 
 const updateEmployee = () => {
-    return inquirer.prompt(
-        [
-            {
-        type: 'input',
-        message: 'Would you like to update an existing Employee Role?',
-        name: 'employeeUpdate'        
-            }
-        ]
-    )
-};
+    db.query ('SELECT id, first_name, last_name FROM employee', 
+    (err, res) => {
+        if (err) throw err;
+        {
+                return inquirer.prompt(
+                    [
+                        {
+                    type: 'input',
+                    message: 'Please enter the employee ID you would like to update: ',
+                    name: 'employeeUpdate'        
+                        }, 
+                        {
+                            type: 'input', 
+                            message: 'Please enter the new dept # you wish to assign to this person: ', 
+                            name: 'newDept'
+                        }
+                    ]
+                ).then (response => {
+                    db.query (`UPDATE employee SET role_id = ${response.employeeUpdate} WHERE id = ${response.newDept}`, 
+                    (err, res) => {
+                        if (err) throw err;
+                        console.log('User has been updated.');
+                        newSelection();
+                    })
+                })
+            };
+    }
+    )    
+}
 
 const viewAllDept = () => {
     db.query(`SELECT * FROM department`, (err, res) =>{
@@ -172,3 +191,16 @@ const allEmployees = () => {
         newSelection();
     })
 }
+
+
+// {
+//     return inquirer.prompt(
+//         [
+//             {
+//         type: 'List',
+//         message: 'Would you like to update an existing Employee Role?',
+//         name: 'employeeUpdate'        
+//             }
+//         ]
+//     )
+// };
