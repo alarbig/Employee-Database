@@ -2,6 +2,8 @@ const inquirer = require('inquirer')
 const cTable = require('console.table');
 const mysql = require('mysql2');
 
+
+//When first loading the application it will first run the connection to the DB. You will need to change the password field to whatever your SQL root password is. 
 const db = mysql.createConnection(
     {
       host: 'localhost',
@@ -16,7 +18,7 @@ const db = mysql.createConnection(
     if (err) throw err;
     newSelection();
   })
-
+//this is the main home page. You can select from various options. 
 const newSelection = () => {
      inquirer.prompt(
         [
@@ -57,16 +59,16 @@ const addDept = () => {
                     }, 
         ]
     ) .then (response => {
-        db.query('INSERT INTO department SET ?', 
-        { name: response.name}, 
-        (err, res) => {
+        db.query('INSERT INTO department SET ?', { 
+            name: response.name
+        }, (err, res) => {
             if (err) throw err;
             console.log(`${response.name} Department added!`);
             newSelection();
         })
     })
 };
-
+// these functions after taking the response will then submit them into the DB via the SQL commands given. 
 const addNewRole = () => {
     return inquirer.prompt(
         [   
@@ -137,6 +139,7 @@ const addEmployee = () => {
     })
 };
 
+//this one first has to query the DB for the relevant data to then be updated. After connecting the DB and then grabbing the response, it will then update the DB with the new information
 const updateEmployee = () => {
     db.query ('SELECT id, first_name, last_name FROM employee', 
     (err, res) => {
@@ -191,16 +194,3 @@ const allEmployees = () => {
         newSelection();
     })
 }
-
-
-// {
-//     return inquirer.prompt(
-//         [
-//             {
-//         type: 'List',
-//         message: 'Would you like to update an existing Employee Role?',
-//         name: 'employeeUpdate'        
-//             }
-//         ]
-//     )
-// };
